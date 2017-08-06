@@ -1,0 +1,63 @@
+﻿@using Microsoft.AspNet.Identity.EntityFramework
+@{
+    ViewBag.Title = "Пользователи";
+}
+
+<h1>@ViewBag.Title</h1>
+<div id="data-table"></div>
+<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#createModal">
+    Создать пользователя
+</button>
+<div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="createModalLabel">Новый пользователь</h4>
+            </div>
+            <div id="create-body" class="modal-body">
+                <form id="create-form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="create-username" placeholder="Логин">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="create-email" placeholder="Email">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="create-password" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="create-personalname" placeholder="Имя">
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" id="create-role">
+                            <option value="">&mdash;&nbsp;роль&nbsp;&mdash;</option>
+                            @foreach (var role in (List<IdentityRole>)ViewData["roles"])
+                            {
+                                <option value="@role.Name">@role.Name</option>
+                            }
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div id="create-progress" class="modal-body">
+                <p style="margin: 30px; text-align:center;">
+                    <img src="~/Images/loadingimg.gif" />
+                </p>
+            </div>
+            <div id="create-footer" class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                <button type="button" class="btn btn-success" onclick="createUser()">Создать</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="~/Scripts/tmScripts.js"></script>
+    <script>
+        $(function () {
+            loadUsers();
+        });
+    </script>
+}

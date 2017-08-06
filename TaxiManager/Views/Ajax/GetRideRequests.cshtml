@@ -1,0 +1,82 @@
+﻿@using TaxiManager.Models
+@model TMRideRequestsVM
+
+<div id="data-table">
+    @if (Model.Requests.Count > 0)
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Создана</th>
+                    <th>Откуда</th>
+                    <th>Куда</th>
+                    <th>Статус</th>
+                    <th>Водитель</th>
+                    @if (Model.Driver || Model.Dispatcher)
+                    {
+                        <th>Действия</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Requests)
+                {
+                    <tr>
+                        <td>@item.CreationTime.ToString()</td>
+                        <td>@item.StartLocation</td>
+                        <td>@item.FinalDestination</td>
+                        <td>@item.StatusDescription</td>
+                        @if (Model.Dispatcher)
+                        {
+                            <td>
+                                @if (item.Driver != null)
+                                {
+                                    @: @item.DriverName
+                                }
+                                else
+                                {
+                                    <select id="select-driver-@item.Id">
+                                        @foreach (var driver in Model.Drivers)
+                                        {
+                                            <option value="@driver.Id">@driver.PersonalName</option>
+                                        }
+                                    </select>
+                                    <button type="button" class="btn btn-xs btn-warning" onclick="assignDriver(@item.Id, $('#select-driver-@item.Id').val())">Назначить</button>
+                                }
+                            </td>
+                        }
+                        else
+                        {
+                            <td>@item.DriverName</td>
+                        }
+                        @if (Model.Dispatcher)
+                        {
+                            <td>
+                                <button type="button" class="btn btn-xs btn-danger" onclick="setRequestStatus(@item.Id, 3)">Отменить</button>
+                            </td>
+                        }
+                        else if (Model.Driver)
+                        {
+                            <td>
+                                <button type="button" class="btn btn-xs btn-danger" onclick="setRequestStatus(@item.Id, 3)">Отменить</button>
+                                @if (item.Status == 1)
+                                {
+                                    <button type="button" class="btn btn-xs btn-success" onclick="setRequestStatus(@item.Id, 2)">Принять</button>
+                                    <button type="button" class="btn btn-xs btn-warning" onclick="rejectRequest(@item.Id)">Отказаться</button>
+                                }
+                                else if (item.Status == 2)
+                                {
+                                    <button type="button" class="btn btn-xs btn-success" onclick="setRequestStatus(@item.Id, 4)">Завершить</button>
+                                }
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-info" role="alert">Заявок нет</div>
+    }
+</div>

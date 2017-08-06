@@ -1,0 +1,36 @@
+﻿@using TaxiManager.Models
+@model TMUsersVM
+
+<div id="data-table">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Логин</th>
+                <th>Emil</th>
+                <th>Имя</th>
+                <th>Роль</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Users)
+            {
+                <tr>
+                    <td>@item.UserName</td>
+                    <td>@item.Email</td>
+                    <td>@item.PersonalName</td>
+                    <td>
+                        <select id="select-role-@item.Id">
+                            @foreach (var role in Model.Roles)
+                            {
+                                <option @if (item.Roles.Any(m => m.RoleId == role.Id)) { <text>selected</text> } value="@role.Name">@role.Name</option>
+                            }
+                        </select>
+                        <button type="button" class="btn btn-xs btn-warning" onclick="assignRole('@item.Id', $('#select-role-@item.Id').val())">Назначить</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+
